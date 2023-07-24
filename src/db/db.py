@@ -61,9 +61,9 @@ class DBConnection:
     
     def write_df_to_db(self, df:pd.DataFrame, table_name:str, use_index_as_pkey:bool=False, id_col:str=None, if_exists:str='replace'):
         if use_index_as_pkey:
-            df.to_sql(name=table_name, con=self.con, if_exists=if_exists, index_label=id_col, method='multi')
+            df.to_sql(name=table_name, con=self.con, if_exists=if_exists, index_label=id_col, method='multi', chunksize=50000)
         else:
-            df.to_sql(name=table_name, con=self.con, if_exists=if_exists, index=False, method='multi')
+            df.to_sql(name=table_name, con=self.con, if_exists=if_exists, index=False, method='multi', chunksize=50000)
         self.execute(f"ALTER TABLE {table_name} ADD PRIMARY KEY ({id_col});")
         self.commit()
         print(f"Created table {table_name} with {len(df.index)} rows")

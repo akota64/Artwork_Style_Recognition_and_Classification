@@ -73,6 +73,8 @@ class MetArtDataNormalizer:
                     'objectBeginDate': 'OBJECT_STARTED_YEAR',
                     'objectEndDate': 'OBJECT_FINISED_YEAR',
                     'metadataDate': 'LAST_UPDATED_DATE',
+                    'primaryImage': 'PRIMARY_IMAGE_URL',
+                    'primaryImageSmall': 'PRIMARY_IMAGE_SMALL_URL'
             })
 
             df = db.get_distinct_columns(
@@ -86,7 +88,7 @@ class MetArtDataNormalizer:
                 join_cols = [col for col in used_df.columns if col in df.columns]
                 df = df.merge(used_df, how='left', on=join_cols)
             
-            df = df[['OBJECT_ID', 'OBJECT_TITLE', 'OBJECT_STARTED_YEAR', 'OBJECT_FINISED_YEAR', 'LAST_UPDATED_DATE'] + foreign_keys]
+            df = df[['OBJECT_ID'] + foreign_keys + ['OBJECT_TITLE', 'OBJECT_STARTED_YEAR', 'OBJECT_FINISED_YEAR', 'PRIMARY_IMAGE_URL', 'PRIMARY_IMAGE_SMALL_URL', 'LAST_UPDATED_DATE']]
 
             db.write_df_to_db(df=df, table_name='OBJECTS', id_col='OBJECT_ID')
 
